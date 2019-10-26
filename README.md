@@ -1,6 +1,6 @@
-[![GoDoc](https://godoc.org/github.com/bruno-chavez/gojwtcognito?status.svg)](https://godoc.org/github.com/bruno-chavez/jwtcognito)
-[![Build Status](https://travis-ci.org/bruno-chavez/gojwtcognito.svg?branch=master)](https://travis-ci.org/bruno-chavez/jwtcognito)
-[![Go Report Card](https://goreportcard.com/badge/github.com/bruno-chavez/gojwtcognito)](https://goreportcard.com/report/github.com/bruno-chavez/jwtcognito)
+[![GoDoc](https://godoc.org/github.com/bruno-chavez/gojwtcognito?status.svg)](https://godoc.org/github.com/bruno-chavez/gojwtcognito)
+[![Build Status](https://travis-ci.org/bruno-chavez/gojwtcognito.svg?branch=master)](https://travis-ci.org/bruno-chavez/gojwtcognito)
+[![Go Report Card](https://goreportcard.com/badge/github.com/bruno-chavez/gojwtcognito)](https://goreportcard.com/report/github.com/bruno-chavez/gojwtcognito)
 
 `gojwtcognito` is an easy to use, small package 
 designed to parse request headers

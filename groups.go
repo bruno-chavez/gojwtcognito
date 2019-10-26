@@ -1,4 +1,4 @@
-package jwtcognito
+package gojwtcognito
 
 import (
 	"github.com/lestrrat-go/jwx/jwk"

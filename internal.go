@@ -1,6 +1,6 @@
-// Package jwtcognito is an easy to use, small package designed to parse request headers and look for
+// Package gojwtcognito is an easy to use, small package designed to parse request headers and look for
 // JWTs provided by AWS Cognito to either check if they are valid or get some data from them.
-package jwtcognito
+package gojwtcognito
 
 import (
 	"encoding/json"
