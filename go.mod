@@ -1,4 +1,4 @@
-module github.com/bruno-chavez/jwtcognito
+module github.com/bruno-chavez/gojwtcognito
 
 go 1.12
 
