@@ -9,6 +9,7 @@ import (
 
 // GetClaims parses a request header and looks for a specific JWT from AWS Cognito.
 // Returns a map with all the claims in it or an error if it is an invalid token.
+// Use this function when you need the Cognito claims of a token.
 func GetClaims(request *http.Request, jwks *jwk.Set, info CognitoConfig, tokenType string) (map[string]interface{}, error) {
 
 	cookie, err := getCookie(request, info.AppClient, tokenType)

@@ -8,6 +8,7 @@ import (
 
 // ValidateTokenFromHeader parses a request header and looks for a specific JWT from AWS Cognito.
 // Returns an error if its not valid or nil if it is.
+// Use this function when you only need to check if a token is valid or not.
 func ValidateTokenFromHeader(request *http.Request, jwks *jwk.Set, info CognitoConfig, tokenType string) error {
 
 	claims, err := GetClaims(request, jwks, info, tokenType)
