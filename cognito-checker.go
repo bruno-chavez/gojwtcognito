@@ -5,7 +5,7 @@ import (
 	"github.com/lestrrat-go/jwx/jwk"
 )
 
-// Cognito is used for passing necessary information to the API of the package.
+// CognitoChecker is the main object of the API of the package.
 // Contains information about your AWS Cognito configuration.
 type CognitoChecker struct {
 	region    string
@@ -14,6 +14,8 @@ type CognitoChecker struct {
 	jwks      *jwk.Set
 }
 
+// NewCognitoChecker is used for generating a CognitoChecker object and been able to use the library
+// Needs the region, user pool id and app client id of your Cognito user pool to work properly
 func NewCognitoChecker(region, userPool, appClient string) (*CognitoChecker, error) {
 	cognitoChecker := &CognitoChecker{}
 
