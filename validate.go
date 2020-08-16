@@ -2,16 +2,15 @@ package gojwtcognito
 
 import (
 	"fmt"
-	"github.com/lestrrat-go/jwx/jwk"
 	"net/http"
 )
 
 // ValidateTokenFromHeader parses a request header and looks for a specific JWT from AWS Cognito.
 // Returns an error if its not valid or nil if it is.
 // Use this function when you only need to check if a token is valid or not.
-func ValidateTokenFromHeader(request *http.Request, jwks *jwk.Set, info CognitoConfig, tokenType string) error {
+func (c CognitoChecker) ValidateTokenFromHeader(request *http.Request, tokenType string) error {
 
-	claims, err := GetClaims(request, jwks, info, tokenType)
+	claims, err := c.GetClaims(request, tokenType)
 	if err != nil {
 		return err
 	}
@@ -23,7 +22,7 @@ func ValidateTokenFromHeader(request *http.Request, jwks *jwk.Set, info CognitoC
 			return fmt.Errorf("invalid token use: %v", claims["token_use"])
 		}
 
-		if claims["aud"] != info.AppClient {
+		if claims["aud"] != c.appClient {
 			return fmt.Errorf("invalid target audience: %v", claims["aud"])
 		}
 	case tokenType == "accessToken":
@@ -32,7 +31,7 @@ func ValidateTokenFromHeader(request *http.Request, jwks *jwk.Set, info CognitoC
 		}
 	}
 
-	iss := fmt.Sprintf("https://cognito-idp.%v.amazonaws.com/%v", info.Region, info.UserPool)
+	iss := fmt.Sprintf("https://cognito-idp.%v.amazonaws.com/%v", c.region, c.userPool)
 	if claims["iss"] != iss {
 		return fmt.Errorf("invalid issuer: %v", claims["iss"])
 	}

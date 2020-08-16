@@ -1,16 +1,15 @@
 package gojwtcognito
 
 import (
-	"github.com/lestrrat-go/jwx/jwk"
 	"net/http"
 )
 
 // GetGroups parses a request header and looks for a specific JWT from AWS Cognito.
 // Returns a slice with all the groups of a user or an error if it is an invalid token.
 // Use this function when you need the Cognito groups of a user.
-func GetGroups(request *http.Request, jwks *jwk.Set, info CognitoConfig) ([]string, error) {
+func (c CognitoChecker) GetGroups(request *http.Request) ([]string, error) {
 
-	claims, err := GetClaims(request, jwks, info, "idToken")
+	claims, err := c.GetClaims(request, "idToken")
 	if err != nil {
 		return nil, err
 	}

@@ -3,21 +3,20 @@ package gojwtcognito
 import (
 	"errors"
 	"github.com/dgrijalva/jwt-go"
-	"github.com/lestrrat-go/jwx/jwk"
 	"net/http"
 )
 
 // GetClaims parses a request header and looks for a specific JWT from AWS Cognito.
 // Returns a map with all the claims in it or an error if it is an invalid token.
 // Use this function when you need the Cognito claims of a token.
-func GetClaims(request *http.Request, jwks *jwk.Set, info CognitoConfig, tokenType string) (map[string]interface{}, error) {
+func (c CognitoChecker) GetClaims(request *http.Request, tokenType string) (map[string]interface{}, error) {
 
-	cookie, err := getCookie(request, info.AppClient, tokenType)
+	cookie, err := getCookie(request, c.appClient, tokenType)
 	if err != nil {
 		return nil, err
 	}
 
-	key, err := getKey(cookie, jwks)
+	key, err := getKey(cookie, c.jwks)
 	if err != nil {
 		return nil, err
 	}

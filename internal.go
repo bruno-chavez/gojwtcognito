@@ -34,7 +34,7 @@ type segment struct {
 	Kid string `json:"kid"`
 }
 
-// getkey builds the key using the JWKs and the first part of the specified cookie in order to match key ids
+// getkey builds the key using the jwks and the first part of the specified cookie in order to match key ids
 func getKey(cookie *http.Cookie, jwks *jwk.Set) (interface{}, error) {
 
 	// the key id of a JWT is in the first part of the value
@@ -50,7 +50,7 @@ func getKey(cookie *http.Cookie, jwks *jwk.Set) (interface{}, error) {
 		return nil, err
 	}
 
-	// matches key id from the cookie and the JWKs
+	// matches key id from the cookie and the jwks
 	keys := jwks.LookupKeyID(seg.Kid)
 	if len(keys) == 0 {
 		return nil, fmt.Errorf("failed to look up: %v", seg.Kid)
