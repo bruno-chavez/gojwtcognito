@@ -26,12 +26,12 @@ validate tokens, get claims or groups.
 + Note that the username password (`ALLOW_USER_PASSWORD_AUTH`)
  based authentication flow is not supported.
 
-+ The region, User Pool ID and App Client 
++ The region, User Pool ID and App Client ID
 can all be found inside AWS Cognito.
 
 + The claims inside each JWT varies depends on the token type
 you pass to `GetClaims`. Please check this [link](https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-tokens-with-identity-providers.html) 
-for the official specification and usage of each token type.
+for the official specification and usage of each token.
 
 ## Documentation
 
@@ -73,7 +73,7 @@ func ExampleHandler(w http.ResponseWriter, r *http.Request) {
 ```go
 func ExampleHandler(w http.ResponseWriter, r *http.Request) {
 
-    claims, err := c.GetClaims(r, "idToken")
+    claims, err := checker.GetClaims(r, "idToken")
     if err != nil {
         log.Println(err)
     }
