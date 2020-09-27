@@ -21,6 +21,8 @@ validate tokens, get claims or groups.
 
 ### Usage Tips 
 
++ The only two tokens that the library works with are `idToken` and `accessToken`.
+
 + Note that the username password (`ALLOW_USER_PASSWORD_AUTH`)
  based authentication flow is not supported.
 
@@ -29,7 +31,7 @@ can all be found inside AWS Cognito.
 
 + The claims inside each JWT varies depends on the token type
 you pass to `GetClaims`. Please check this [link](https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-tokens-with-identity-providers.html) 
-for the official specification of each token type.
+for the official specification and usage of each token type.
 
 ## Documentation
 
