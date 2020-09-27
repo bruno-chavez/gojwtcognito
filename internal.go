@@ -11,19 +11,19 @@ import (
 	"strings"
 )
 
-// fetches from the request header all the necessary info to get the cookie where the JWT lays
+// fetches from the request header all the necessary info to get the cookie info
 func getCookie(request *http.Request, appClient string, tokenType string) (*http.Cookie, error) {
 
-	appClientCookieName := fmt.Sprintf("CognitoIdentityServiceProvider.%v.LastAuthUser", appClient)
-	userId, err := request.Cookie(appClientCookieName)
+	userIdCookie := fmt.Sprintf("CognitoIdentityServiceProvider.%v.LastAuthUser", appClient)
+	userId, err := request.Cookie(userIdCookie)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("could not find cookie with name: %v", userIdCookie)
 	}
 
 	tokenName := fmt.Sprintf("CognitoIdentityServiceProvider.%v.%v.%v", appClient, userId.Value, tokenType)
 	cookie, err := request.Cookie(tokenName)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("could not find cookie with name: %v", tokenName)
 	}
 
 	return cookie, nil
@@ -34,7 +34,7 @@ type segment struct {
 	Kid string `json:"kid"`
 }
 
-// getkey builds the key using the jwks and the first part of the specified cookie in order to match key ids
+// getKey builds the key using the jwks and the first part of the specified cookie in order to match key ids
 func getKey(cookie *http.Cookie, jwks *jwk.Set) (interface{}, error) {
 
 	// the key id of a JWT is in the first part of the value
