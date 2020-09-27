@@ -21,23 +21,15 @@ validate tokens, get claims or groups.
 
 ### Usage Tips 
 
-+ You can then pass the `CognitoChecker` object pointer 
-to other parts of your code  that get called multiple times, 
-like server handlers for example.
++ Note that the username password (`ALLOW_USER_PASSWORD_AUTH`)
+ based authentication flow is not supported.
 
 + The region, User Pool ID and App Client 
 can all be found inside AWS Cognito.
 
-+ The supported tokens that Cognito uses for 
-authentication are either `accessToken` or  `idToken`.
-
-+ If you need to check for user data like emails, 
-names or associated groups
-```idToken``` is what you are looking for.
-
 + The claims inside each JWT varies depends on the token type
-you pass to `GetClaims`.
-
+you pass to `GetClaims`. Please check this [link](https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-tokens-with-identity-providers.html) 
+for the official specification of each token type.
 
 ## Documentation
 
@@ -46,21 +38,21 @@ page for more info on what is available inside the package.
 
 ## Examples
 
-### Generating the object
-```
+### Generating the checker object
+```go
 
-cognitoChecker := gojwtcognito.NewCognitoChecker(
-                       "us-east-1",
-                       "us-east-1_apwePSzx",
-                       "3b1fh12qzvmgjuio563qtm678u",
+checker := gojwtcognito.NewCognitoChecker(
+                       "us-east-1", // region
+                       "us-east-1_apwePSzx", // user pool id
+                       "3b1fh12qzvmgjuio563qtm678u", // client app id
                   )
 ```
 
 ### Validating an accessToken
-```
-func verifyUser(w http.ResponseWriter, r *http.Request, c *cognitoChecker) {
+```go
+func ExampleHandler(w http.ResponseWriter, r *http.Request) {
 
-    err := c.ValidateTokenFromHeader(r, "accessToken")
+    err := checker.ValidateTokenFromHeader(r, "accessToken")
     if err != nil {
         log.Println(err)
         return
@@ -71,14 +63,13 @@ func verifyUser(w http.ResponseWriter, r *http.Request, c *cognitoChecker) {
         log.Println(err)
         return
     }
-
 }
 ```
 
 #### Looking up a specific claim
 `claims` is a map of type `map[string]interface{}`
-```
-func Claims(w http.ResponseWriter, r *http.Request, c *cognitoChecker) {
+```go
+func ExampleHandler(w http.ResponseWriter, r *http.Request) {
 
     claims, err := c.GetClaims(r, "idToken")
     if err != nil {
@@ -91,10 +82,10 @@ func Claims(w http.ResponseWriter, r *http.Request, c *cognitoChecker) {
 
 #### Looking up all the groups of a user
 `groups` is a slice of type `[]string`
-```
-func Groups(w http.ResponseWriter, r *http.Request, c *cognitoChecker) {
+```go
+func ExampleHandler(w http.ResponseWriter, r *http.Request) {
 
-    groups, err := c.GetGroups(r)
+    groups, err := checker.GetGroups(r)
     if err != nil {
         log.Println(err)
     }
