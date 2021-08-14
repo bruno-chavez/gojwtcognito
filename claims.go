@@ -1,8 +1,8 @@
 package gojwtcognito
 
 import (
-	"errors"
-	"github.com/dgrijalva/jwt-go"
+	"fmt"
+	"github.com/lestrrat-go/jwx/jwt"
 	"net/http"
 )
 
@@ -11,35 +11,20 @@ import (
 // Use this function when you need the Cognito claims of a token.
 func (c CognitoChecker) GetClaims(request *http.Request, tokenType string) (map[string]interface{}, error) {
 
-	cookie, err := getCookie(request, c.appClient, tokenType)
+	encryptedToken, err := c.getJWT(request, tokenType)
 	if err != nil {
 		return nil, err
 	}
 
-	key, err := getKey(cookie, c.jwks)
+	token, err := jwt.Parse(encryptedToken, jwt.WithKeySet(c.jwks))
+	if err != nil {
+		return nil, fmt.Errorf("error decrypting JWT: %w", err)
+	}
+
+	err = c.validateJWT(token.PrivateClaims(), tokenType)
 	if err != nil {
 		return nil, err
 	}
 
-	token, err := getToken(cookie, key)
-	if err != nil {
-		return nil, err
-	}
-
-	// goes over all the claims and adds them to a map
-	claims := make(map[string]interface{})
-	mapClaims, ok := token.Claims.(jwt.MapClaims)
-	if !ok {
-		return nil, errors.New("invalid token claims")
-	}
-
-	if !token.Valid {
-		return nil, errors.New("invalid token")
-	}
-
-	for i, v := range mapClaims {
-		claims[i] = v
-	}
-
-	return claims, nil
+	return token.PrivateClaims(), nil
 }
