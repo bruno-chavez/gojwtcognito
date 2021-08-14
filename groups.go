@@ -14,7 +14,7 @@ func (c CognitoChecker) GetGroups(request *http.Request) ([]string, error) {
 		return nil, err
 	}
 
-	// Type asserts all the groups to strings since they can't anything else
+	// Type asserts all the groups to strings since they can't be anything else
 	var groups []string
 	for _, v := range claims["cognito:groups"].([]interface{}) {
 		groups = append(groups, v.(string))

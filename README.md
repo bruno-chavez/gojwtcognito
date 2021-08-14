@@ -1,11 +1,8 @@
 [![GoDoc](https://godoc.org/github.com/bruno-chavez/gojwtcognito?status.svg)](https://godoc.org/github.com/bruno-chavez/gojwtcognito)
-[![Build Status](https://travis-ci.org/bruno-chavez/gojwtcognito.svg?branch=master)](https://travis-ci.org/bruno-chavez/gojwtcognito)
 [![Go Report Card](https://goreportcard.com/badge/github.com/bruno-chavez/gojwtcognito)](https://goreportcard.com/report/github.com/bruno-chavez/gojwtcognito)
 
-`gojwtcognito` is an easy to use, small package 
-designed to parse request headers
-and look for JWTs provided by AWS Cognito 
-to either check if they are valid or get info from them.
+`gojwtcognito` is an easy-to-use, small wrapper over 'github.com/lestrrat-go/jwx/jwk'
+to provide specific functionality to work with AWS Cognito JWTs
 
 ##  Install
 
@@ -15,7 +12,7 @@ $ go get github.com/bruno-chavez/gojwtcognito
 
 ## Usage
 
-Import the package, call a `NewCognitoChecker`.
+Import the package and call `NewCognitoChecker`.
 From here you pass the object pointer to where you need to
 validate tokens, get claims or groups.
 
@@ -23,7 +20,7 @@ validate tokens, get claims or groups.
 
 + The only two tokens that the library works with are `idToken` and `accessToken`.
 
-+ Note that the username password (`ALLOW_USER_PASSWORD_AUTH`)
++ Note that the username-password (`ALLOW_USER_PASSWORD_AUTH`)
  based authentication flow is not supported.
 
 + The region, User Pool ID and App Client ID
@@ -52,7 +49,7 @@ checker := gojwtcognito.NewCognitoChecker(
 
 ### Validating an accessToken
 ```go
-func ExampleHandler(w http.ResponseWriter, r *http.Request) {
+func CheckJWTValidityMiddleware(w http.ResponseWriter, r *http.Request) {
 
     err := checker.ValidateTokenFromHeader(r, "accessToken")
     if err != nil {
@@ -60,7 +57,7 @@ func ExampleHandler(w http.ResponseWriter, r *http.Request) {
         return
     }
     
-    err = c.ValidateTokenFromHeader(r, "idToken")
+    err = checker.ValidateTokenFromHeader(r, "idToken")
     if err != nil {
         log.Println(err)
         return
@@ -110,4 +107,4 @@ this repository and add your feature, then send a pull request.
 
 ## License
 The MIT License (MIT)
-Copyright (c) 2020 Bruno Chavez
+Copyright (c) 2021 Bruno Chavez
