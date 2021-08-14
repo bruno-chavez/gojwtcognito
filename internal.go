@@ -64,18 +64,30 @@ func getKey(cookie *http.Cookie, jwks *jwk.Set) (interface{}, error) {
 	return key, nil
 }
 
-// parses a JWT using the cookie where it is contained and the key obtained from getKey() and returns it.
-func getToken(cookie *http.Cookie, key interface{}) (*jwt.Token, error) {
+func (c CognitoChecker) validateJWT(claims map[string]interface{}, tokenType string) error {
 
-	token, err := jwt.Parse(cookie.Value, func(token *jwt.Token) (interface{}, error) {
-		if _, ok := token.Method.(*jwt.SigningMethodRSA); !ok {
-			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+	// verifies token_use, issuer/client_id and target audience inside a JWT
+	switch {
+	case tokenType == "idToken":
+		if claims["token_use"] != "id" {
+			return fmt.Errorf("invalid token use: %v", claims["token_use"])
 		}
-		return key, nil
-	})
-	if err != nil {
-		return nil, err
+		if claims["aud"] != c.appClient {
+			return fmt.Errorf("invalid target audience: %v", claims["aud"])
+		}
+	case tokenType == "accessToken":
+		if claims["token_use"] != "access" {
+			return fmt.Errorf("invalid token use: %v", claims["token_use"])
+		}
+		if claims["client_id"] != c.appClient {
+			return fmt.Errorf("invalid target audience: %v", claims["client_id"])
+		}
 	}
 
-	return token, nil
+	iss := fmt.Sprintf("https://cognito-idp.%v.amazonaws.com/%v", c.region, c.userPool)
+	if claims["iss"] != iss {
+		return fmt.Errorf("invalid issuer: %v", claims["iss"])
+	}
+
+	return nil
 }
